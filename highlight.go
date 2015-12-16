@@ -1,7 +1,7 @@
 // Package syntaxhighlight provides syntax highlighting for code. It currently
 // uses a language-independent lexer and performs decently on JavaScript, Java,
 // Ruby, Python, Go, and C.
-package syntaxhighlight
+package frontman
 
 import (
 	"bytes"
@@ -59,6 +59,12 @@ type HTMLConfig struct {
 }
 
 type HTMLPrinter HTMLConfig
+
+type Classifier interface {
+	Printer
+	Class(Kind) string
+	TokenKind(tok rune, tokString string) Kind
+}
 
 // Class returns the set class for a given token Kind.
 func (c HTMLConfig) Class(kind Kind) string {
@@ -137,6 +143,61 @@ func (a HTMLAnnotator) Annotate(start int, kind Kind, tokText string) (*annotate
 	return nil, nil
 }
 
+type HTMLClassifier HTMLConfig
+
+func (h HTMLClassifier) TokenKind(tok rune, tokText string) Kind {
+	switch tok {
+	case scanner.Ident:
+		if IsKeyword(tokText) {
+			return Keyword
+		}
+		if r, _ := utf8.DecodeRuneInString(tokText); unicode.IsUpper(r) {
+			return Type
+		}
+		return Plaintext
+	case scanner.Float, scanner.Int:
+		return Decimal
+	case scanner.Char, scanner.String, scanner.RawString:
+		return String
+	case scanner.Comment:
+		return Comment
+	}
+	if unicode.IsSpace(tok) {
+		return Whitespace
+	}
+	return Punctuation
+}
+
+func (h HTMLClassifier) Class(kind Kind) string {
+	return ((HTMLConfig)(h)).Class(kind)
+}
+
+func (h HTMLClassifier) Print(w io.Writer, kind Kind, tokText string) error {
+	class := ((HTMLConfig)(h)).Class(kind)
+	if class != "" {
+		_, err := w.Write([]byte(`<span class="`))
+		if err != nil {
+			return err
+		}
+		_, err = io.WriteString(w, class)
+		if err != nil {
+			return err
+		}
+		_, err = w.Write([]byte(`">`))
+		if err != nil {
+			return err
+		}
+	}
+	template.HTMLEscape(w, []byte(tokText))
+	if class != "" {
+		_, err := w.Write([]byte(`</span>`))
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 // DefaultHTMLConfig's class names match those of google-code-prettify
 // (https://code.google.com/p/google-code-prettify/).
 var DefaultHTMLConfig = HTMLConfig{
@@ -155,7 +216,7 @@ var DefaultHTMLConfig = HTMLConfig{
 	Whitespace:    "",
 }
 
-func Print(s *scanner.Scanner, w io.Writer, p Printer) error {
+func Print(s *scanner.Scanner, w io.Writer, p Classifier) error {
 	tok := s.Scan()
 	for tok != scanner.EOF {
 		tokText := s.TokenText()
@@ -197,7 +258,21 @@ func Annotate(src []byte, a Annotator) (annotate.Annotations, error) {
 
 func AsHTML(src []byte) ([]byte, error) {
 	var buf bytes.Buffer
-	err := Print(NewScanner(src), &buf, HTMLPrinter(DefaultHTMLConfig))
+	err := Print(NewScanner(src), &buf, HTMLClassifier(DefaultHTMLConfig))
+	if err != nil {
+		return nil, err
+	}
+	return buf.Bytes(), nil
+}
+
+func Highlight(src []byte, embed bool, theme string, klasifier ...Classifier) ([]byte, error) {
+	var c Classifier
+	c = HTMLClassifier(DefaultHTMLConfig)
+	if len(klasifier) > 0 {
+		c = klasifier[0]
+	}
+	var buf bytes.Buffer
+	err := Print(NewScanner(src), &buf, c)
 	if err != nil {
 		return nil, err
 	}

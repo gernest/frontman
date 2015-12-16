@@ -1,4 +1,4 @@
-package syntaxhighlight
+package frontman
 
 import (
 	"bytes"

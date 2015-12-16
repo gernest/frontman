@@ -1,4 +1,4 @@
-package syntaxhighlight
+package frontman
 
 var keywords = map[string]struct{}{
 	"BEGIN":            {},

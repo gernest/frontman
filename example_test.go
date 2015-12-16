@@ -1,4 +1,4 @@
-package syntaxhighlight_test
+package frontman_test
 
 import (
 	"fmt"
