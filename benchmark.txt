@@ -1,3 +1,3 @@
 PASS
-BenchmarkAnnotate-2	   10000	    223119 ns/op	   15129 B/op	     491 allocs/op
-ok  	github.com/gernest/frontman	2.254s
+BenchmarkAnnotate-2	   10000	    233452 ns/op	   15129 B/op	     491 allocs/op
+ok  	github.com/gernest/frontman	2.355s

@@ -222,7 +222,7 @@ func NewScannerReader(src io.Reader) *scanner.Scanner {
 func tokenKind(tok rune, tokText string) Kind {
 	switch tok {
 	case scanner.Ident:
-		if _, isKW := keywords[tokText]; isKW {
+		if IsKeyword(tokText) {
 			return Keyword
 		}
 		if r, _ := utf8.DecodeRuneInString(tokText); unicode.IsUpper(r) {

@@ -175,3 +175,9 @@ var keywords = map[string]struct{}{
 	"with":             {},
 	"yield":            {},
 }
+
+//IsKeyword returns true if the tok is in the list of known keywords.
+func IsKeyword(tok string) bool {
+	_, ok := keywords[tok]
+	return ok
+}
