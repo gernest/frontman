@@ -36,10 +36,6 @@ const (
 
 //go:generate gostringer -type=Kind
 
-type Printer interface {
-	Print(w io.Writer, kind Kind, tokText string) error
-}
-
 // HTMLConfig holds the HTML class configuration to be used by annotators when
 // highlighting code.
 type HTMLConfig struct {
@@ -58,10 +54,8 @@ type HTMLConfig struct {
 	Whitespace    string
 }
 
-type HTMLPrinter HTMLConfig
-
 type Classifier interface {
-	Printer
+	Print(w io.Writer, kind Kind, tokString string) error
 	Class(Kind) string
 	TokenKind(tok rune, tokString string) Kind
 }
@@ -95,32 +89,6 @@ func (c HTMLConfig) Class(kind Kind) string {
 		return c.Decimal
 	}
 	return ""
-}
-
-func (p HTMLPrinter) Print(w io.Writer, kind Kind, tokText string) error {
-	class := ((HTMLConfig)(p)).Class(kind)
-	if class != "" {
-		_, err := w.Write([]byte(`<span class="`))
-		if err != nil {
-			return err
-		}
-		_, err = io.WriteString(w, class)
-		if err != nil {
-			return err
-		}
-		_, err = w.Write([]byte(`">`))
-		if err != nil {
-			return err
-		}
-	}
-	template.HTMLEscape(w, []byte(tokText))
-	if class != "" {
-		_, err := w.Write([]byte(`</span>`))
-		if err != nil {
-			return err
-		}
-	}
-	return nil
 }
 
 type Annotator interface {
@@ -216,11 +184,11 @@ var DefaultHTMLConfig = HTMLConfig{
 	Whitespace:    "",
 }
 
-func Print(s *scanner.Scanner, w io.Writer, p Classifier) error {
+func Print(s *scanner.Scanner, w io.Writer, c Classifier) error {
 	tok := s.Scan()
 	for tok != scanner.EOF {
 		tokText := s.TokenText()
-		err := p.Print(w, tokenKind(tok, tokText), tokText)
+		err := c.Print(w, c.TokenKind(tok, tokText), tokText)
 		if err != nil {
 			return err
 		}
