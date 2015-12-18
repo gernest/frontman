@@ -1,4 +1,4 @@
-package frontman
+package syntax
 
 import (
 	"bytes"
