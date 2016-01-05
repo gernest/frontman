@@ -4,7 +4,7 @@ var themes = map[string]string{
 	"prettity": prettity,
 	"desert":   desert,
 	"doxy":     doxy,
-	"obsidian", obsidian,
+	"obsidian": obsidian,
 	"sunburst": sunburst,
 }
 
@@ -32,33 +32,20 @@ var prettity = `
 /* SPAN elements with the classes below are added by prettyprint. */
 .pln { color: #000 }  /* plain text */
 
-@media screen {
-  .str { color: #080 }  /* string content */
-  .kwd { color: #008 }  /* a keyword */
-  .com { color: #800 }  /* a comment */
-  .typ { color: #606 }  /* a type name */
-  .lit { color: #066 }  /* a literal value */
-  /* punctuation, lisp open bracket, lisp close bracket */
-  .pun, .opn, .clo { color: #660 }
-  .tag { color: #008 }  /* a markup tag name */
-  .atn { color: #606 }  /* a markup attribute name */
-  .atv { color: #080 }  /* a markup attribute value */
-  .dec, .var { color: #606 }  /* a declaration; a variable name */
-  .fun { color: red }  /* a function name */
-}
+.str { color: #080 }  /* string content */
+.kwd { color: #008 }  /* a keyword */
+.com { color: #800 }  /* a comment */
+.typ { color: #606 }  /* a type name */
+.lit { color: #066 }  /* a literal value */
+/* punctuation, lisp open bracket, lisp close bracket */
+.pun, .opn, .clo { color: #660 }
+.tag { color: #008 }  /* a markup tag name */
+.atn { color: #606 }  /* a markup attribute name */
+.atv { color: #080 }  /* a markup attribute value */
+.dec, .var { color: #606 }  /* a declaration; a variable name */
+.fun { color: red }  /* a function name */
 
-/* Use higher contrast and text-weight for printable form. */
-@media print, projection {
-  .str { color: #060 }
-  .kwd { color: #006; font-weight: bold }
-  .com { color: #600; font-style: italic }
-  .typ { color: #404; font-weight: bold }
-  .lit { color: #044 }
-  .pun, .opn, .clo { color: #440 }
-  .tag { color: #006; font-weight: bold }
-  .atn { color: #404 }
-  .atv { color: #060 }
-}
+
 
 /* Put a border around prettyprinted code snippets. */
 pre.prettyprint { padding: 2px; border: 1px solid #888 }
@@ -102,20 +89,7 @@ ol.linenums { margin-top: 0; margin-bottom: 0; color: #AEAEAE } /* IE indents vi
 li.L0,li.L1,li.L2,li.L3,li.L5,li.L6,li.L7,li.L8 { list-style-type: none }
 /* Alternate shading for lines */
 li.L1,li.L3,li.L5,li.L7,li.L9 { }
-
-@media print {
-  pre.prettyprint { background-color: none }
-  pre .str, code .str { color: #060 }
-  pre .kwd, code .kwd { color: #006; font-weight: bold }
-  pre .com, code .com { color: #600; font-style: italic }
-  pre .typ, code .typ { color: #404; font-weight: bold }
-  pre .lit, code .lit { color: #044 }
-  pre .pun, code .pun { color: #440 }
-  pre .pln, code .pln { color: #000 }
-  pre .tag, code .tag { color: #006; font-weight: bold }
-  pre .atn, code .atn { color: #404 }
-  pre .atv, code .atv { color: #060 }
-}`
+`
 
 var doxy = `
 /* Doxy pretty-printing styles. Used with prettify.js.  */
@@ -165,23 +139,7 @@ ol.linenums { margin-top: 0; margin-bottom: 0; color: #8B8970; } /* IE indents v
 li.L0,li.L1,li.L2,li.L3,li.L5,li.L6,li.L7,li.L8 { list-style-type: none }
 /* Alternate shading for lines */
 li.L1,li.L3,li.L5,li.L7,li.L9 { }
-
-/* print is mostly unchanged from default at present  */
-@media print {
-  pre.prettyprint, code.prettyprint { background-color: #fff;  }
-  pre .str, code .str { color: #088; }
-  pre .kwd, code .kwd { color: #006; font-weight: bold; }
-  pre .com, code .com { color: #oc3; font-style: italic; }
-  pre .typ, code .typ { color: #404; font-weight: bold; }
-  pre .lit, code .lit { color: #044; }
-  pre .pun, code .pun { color: #440; }
-  pre .pln, code .pln { color: #000; }
-  pre .tag, code .tag { color: #b66ff7; font-weight: bold; }
-  pre .htm, code .htm { color: #606; font-weight: bold; }
-  pre .xsl, code .xsl { color: #606; font-weight: bold; }
-  pre .atn, code .atn { color: #c71585;  font-weight: normal; }
-  pre .atv, code .atv { color: #088;  font-weight: normal; }
-}`
+`
 
 var obsidian = `
 /*
@@ -191,62 +149,62 @@ var obsidian = `
  * http://CodeTunnel.com/blog/post/71/google-code-prettify-obsidian-theme
  */
 
-.str
-{
-    color: #EC7600;
-}
-.kwd
-{
-    color: #93C763;
-}
-.com
-{
-    color: #66747B;
-}
-.typ
-{
-    color: #678CB1;
-}
-.lit
-{
-    color: #FACD22;
-}
-.pun
-{
-    color: #F1F2F3;
-}
-.pln
-{
-    color: #F1F2F3;
-}
-.tag
-{
-    color: #8AC763;
-}
-.atn
-{
-    color: #E0E2E4;
-}
-.atv
-{
-    color: #EC7600;
-}
-.dec
-{
-    color: purple;
-}
-pre.prettyprint
-{
-    border: 0px solid #888;
-}
-ol.linenums
-{
-    margin-top: 0;
-    margin-bottom: 0;
-}
-.prettyprint {
-    background: #000;
-}
+ .str
+ {
+	 color: #EC7600;
+ }
+ .kwd
+ {
+	 color: #93C763;
+ }
+ .com
+ {
+	 color: #66747B;
+ }
+ .typ
+ {
+	 color: #678CB1;
+ }
+ .lit
+ {
+	 color: #FACD22;
+ }
+ .pun
+ {
+	 color: #F1F2F3;
+ }
+ .pln
+ {
+	 color: #F1F2F3;
+ }
+ .tag
+ {
+	 color: #8AC763;
+ }
+ .atn
+ {
+	 color: #E0E2E4;
+ }
+ .atv
+ {
+	 color: #EC7600;
+ }
+ .dec
+ {
+	 color: purple;
+ }
+ pre.prettyprint
+ {
+	 border: 0px solid #888;
+ }
+ ol.linenums
+ {
+	 margin-top: 0;
+	 margin-bottom: 0;
+ }
+ .prettyprint {
+	 background: #000;
+ }
 li.L0, li.L1, li.L2, li.L3, li.L4, li.L5, li.L6, li.L7, li.L8, li.L9
 {
     color: #555;
@@ -255,53 +213,7 @@ li.L0, li.L1, li.L2, li.L3, li.L4, li.L5, li.L6, li.L7, li.L8, li.L9
 li.L1, li.L3, li.L5, li.L7, li.L9 {
     background: #111;
 }
-@media print
-{
-    .str
-    {
-        color: #060;
-    }
-    .kwd
-    {
-        color: #006;
-        font-weight: bold;
-    }
-    .com
-    {
-        color: #600;
-        font-style: italic;
-    }
-    .typ
-    {
-        color: #404;
-        font-weight: bold;
-    }
-    .lit
-    {
-        color: #044;
-    }
-    .pun
-    {
-        color: #440;
-    }
-    .pln
-    {
-        color: #000;
-    }
-    .tag
-    {
-        color: #006;
-        font-weight: bold;
-    }
-    .atn
-    {
-        color: #404;
-    }
-    .atv
-    {
-        color: #060;
-    }
-}`
+`
 
 var sunburst = `
 /* Pretty printing styles. Used with prettify.js. */
@@ -342,16 +254,4 @@ ol.linenums { margin-top: 0; margin-bottom: 0; color: #AEAEAE; } /* IE indents v
 li.L0,li.L1,li.L2,li.L3,li.L5,li.L6,li.L7,li.L8 { list-style-type: none }
 /* Alternate shading for lines */
 li.L1,li.L3,li.L5,li.L7,li.L9 { }
-
-@media print {
-  pre .str, code .str { color: #060; }
-  pre .kwd, code .kwd { color: #006; font-weight: bold; }
-  pre .com, code .com { color: #600; font-style: italic; }
-  pre .typ, code .typ { color: #404; font-weight: bold; }
-  pre .lit, code .lit { color: #044; }
-  pre .pun, code .pun { color: #440; }
-  pre .pln, code .pln { color: #000; }
-  pre .tag, code .tag { color: #006; font-weight: bold; }
-  pre .atn, code .atn { color: #404; }
-  pre .atv, code .atv { color: #060; }
-}`
+`
