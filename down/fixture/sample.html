@@ -1,0 +1,124 @@
+<html><head><style type="text/css">
+@media screen {
+  .str {
+    color: #080;
+  }
+  .kwd {
+    color: #008;
+  }
+  .com {
+    color: #800;
+  }
+  .typ {
+    color: #606;
+  }
+  .lit {
+    color: #066;
+  }
+  .pun, .opn, .clo {
+    color: #660;
+  }
+  .tag {
+    color: #008;
+  }
+  .atn {
+    color: #606;
+  }
+  .atv {
+    color: #080;
+  }
+  .dec, .var {
+    color: #606;
+  }
+  .fun {
+    color: red;
+  }
+}
+@media print, projection {
+  .str {
+    color: #060;
+  }
+  .kwd {
+    color: #006;
+    font-weight: bold;
+  }
+  .com {
+    color: #600;
+    font-style: italic;
+  }
+  .typ {
+    color: #404;
+    font-weight: bold;
+  }
+  .lit {
+    color: #044;
+  }
+  .pun, .opn, .clo {
+    color: #440;
+  }
+  .tag {
+    color: #006;
+    font-weight: bold;
+  }
+  .atn {
+    color: #404;
+  }
+  .atv {
+    color: #060;
+  }
+}
+</style></head><body><h1 id="frontman">frontman</h1>
+<pre><code class="lang-go">
+<span class="kwd">package</span> <span class="pln" style="color: #000;">down</span>
+
+<span class="kwd">import</span> <span class="pun">(</span>
+    <span class="str">&#34;io&#34;</span>
+    <span class="str">&#34;io/ioutil&#34;</span>
+
+    <span class="str">&#34;github.com/gernest/douceur/inliner&#34;</span>
+    <span class="str">&#34;github.com/gernest/douceur/parser&#34;</span>
+    <span class="str">&#34;github.com/gernest/mark&#34;</span>
+<span class="pun">)</span>
+
+<span class="kwd">const</span> <span class="typ">DeafultTheme</span> <span class="pun">=</span> <span class="str">&#34;prettity&#34;</span>
+
+<span class="kwd">func</span> <span class="typ">Mark</span><span class="pun">(</span><span class="pln" style="color: #000;">out</span> <span class="pln" style="color: #000;">io</span><span class="pun">.</span><span class="typ">Writer</span><span class="pun">,</span> <span class="pln" style="color: #000;">src</span> <span class="pln" style="color: #000;">io</span><span class="pun">.</span><span class="typ">Reader</span><span class="pun">,</span> <span class="pln" style="color: #000;">highlight</span><span class="pun">,</span> <span class="pln" style="color: #000;">embed</span> <span class="kwd">bool</span><span class="pun">,</span> <span class="pln" style="color: #000;">theme</span> <span class="pun">.</span><span class="pun">.</span><span class="pun">.</span><span class="pln" style="color: #000;">string</span><span class="pun">)</span> <span class="pln" style="color: #000;">error</span> <span class="pun">{</span>
+    <span class="pln" style="color: #000;">style</span> <span class="pun">=</span> <span class="typ">DeafultTheme</span>
+    <span class="kwd">if</span> <span class="pln" style="color: #000;">len</span><span class="pun">(</span><span class="pln" style="color: #000;">theme</span><span class="pun">)</span> <span class="pun">&gt;</span> <span class="dec">0</span> <span class="pun">{</span>
+        <span class="pln" style="color: #000;">style</span> <span class="pun">=</span> <span class="pln" style="color: #000;">theme</span><span class="pun">[</span><span class="dec">0</span><span class="pun">]</span>
+    <span class="pun">}</span>
+    <span class="pln" style="color: #000;">data</span><span class="pun">,</span> <span class="pln" style="color: #000;">err</span> <span class="pun">:</span><span class="pun">=</span> <span class="pln" style="color: #000;">ioutil</span><span class="pun">.</span><span class="typ">ReadAll</span><span class="pun">(</span><span class="pln" style="color: #000;">src</span><span class="pun">)</span>
+    <span class="kwd">if</span> <span class="pln" style="color: #000;">err</span> <span class="pun">!</span><span class="pun">=</span> <span class="kwd">nil</span> <span class="pun">{</span>
+        <span class="kwd">return</span> <span class="pln" style="color: #000;">err</span>
+    <span class="pun">}</span>
+    <span class="pln" style="color: #000;">opts</span> <span class="pun">:</span><span class="pun">=</span> <span class="pun">&amp;</span><span class="pln" style="color: #000;">mark</span><span class="pun">.</span><span class="typ">Options</span><span class="pun">{</span>
+        <span class="typ">Gfm</span><span class="pun">:</span>       <span class="kwd">true</span><span class="pun">,</span>
+        <span class="typ">Highlight</span><span class="pun">:</span> <span class="pln" style="color: #000;">highlight</span><span class="pun">,</span>
+    <span class="pun">}</span>
+    <span class="pln" style="color: #000;">m</span> <span class="pun">:</span><span class="pun">=</span> <span class="pln" style="color: #000;">mark</span><span class="pun">.</span><span class="typ">New</span><span class="pun">(</span><span class="pln" style="color: #000;">string</span><span class="pun">(</span><span class="pln" style="color: #000;">data</span><span class="pun">)</span><span class="pun">,</span> <span class="pun">&amp;</span><span class="pln" style="color: #000;">opts</span><span class="pun">)</span>
+    <span class="pln" style="color: #000;">result</span> <span class="pun">:</span><span class="pun">=</span> <span class="pln" style="color: #000;">m</span><span class="pun">.</span><span class="typ">Render</span><span class="pun">(</span><span class="pun">)</span>
+    <span class="kwd">if</span> <span class="pln" style="color: #000;">embed</span> <span class="pun">{</span>
+        <span class="pln" style="color: #000;">result</span><span class="pun">,</span> <span class="pln" style="color: #000;">err</span> <span class="pun">=</span> <span class="typ">Embed</span><span class="pun">(</span><span class="pln" style="color: #000;">result</span><span class="pun">,</span> <span class="pln" style="color: #000;">style</span><span class="pun">)</span>
+        <span class="kwd">if</span> <span class="pln" style="color: #000;">err</span> <span class="pun">!</span><span class="pun">=</span> <span class="kwd">nil</span> <span class="pun">{</span>
+            <span class="kwd">return</span> <span class="pln" style="color: #000;">err</span>
+        <span class="pun">}</span>
+    <span class="pun">}</span>
+    <span class="pln" style="color: #000;">_</span><span class="pun">,</span> <span class="pln" style="color: #000;">err</span> <span class="pun">=</span> <span class="pln" style="color: #000;">out</span><span class="pun">.</span><span class="typ">Write</span><span class="pun">(</span><span class="pun">[</span><span class="pun">]</span><span class="kwd">byte</span><span class="pun">(</span><span class="pln" style="color: #000;">result</span><span class="pun">)</span><span class="pun">)</span>
+    <span class="kwd">return</span> <span class="pln" style="color: #000;">err</span>
+<span class="pun">}</span>
+
+<span class="kwd">func</span> <span class="typ">Embed</span><span class="pun">(</span><span class="pln" style="color: #000;">html</span> <span class="pln" style="color: #000;">string</span><span class="pun">,</span> <span class="pln" style="color: #000;">style</span> <span class="pln" style="color: #000;">string</span><span class="pun">)</span> <span class="pun">(</span><span class="pln" style="color: #000;">string</span><span class="pun">,</span> <span class="pln" style="color: #000;">error</span><span class="pun">)</span> <span class="pun">{</span>
+    <span class="pln" style="color: #000;">sheet</span><span class="pun">,</span> <span class="pln" style="color: #000;">err</span> <span class="pun">:</span><span class="pun">=</span> <span class="pln" style="color: #000;">parser</span><span class="pun">.</span><span class="typ">Parse</span><span class="pun">(</span><span class="typ">GetStyle</span><span class="pun">(</span><span class="pln" style="color: #000;">style</span><span class="pun">)</span><span class="pun">)</span>
+    <span class="kwd">if</span> <span class="pln" style="color: #000;">err</span> <span class="pun">!</span><span class="pun">=</span> <span class="kwd">nil</span> <span class="pun">{</span>
+        <span class="kwd">return</span> <span class="str">&#34;&#34;</span><span class="pun">,</span> <span class="pln" style="color: #000;">err</span>
+    <span class="pun">}</span>
+    <span class="kwd">return</span> <span class="pln" style="color: #000;">inliner</span><span class="pun">.</span><span class="typ">NewInliner</span><span class="pun">(</span><span class="pln" style="color: #000;">html</span><span class="pun">,</span> <span class="pln" style="color: #000;">sheet</span><span class="pun">)</span><span class="pun">.</span><span class="typ">Inline</span><span class="pun">(</span><span class="pun">)</span>
+<span class="pun">}</span>
+<span class="kwd">func</span> <span class="typ">GetStyle</span><span class="pun">(</span><span class="pln" style="color: #000;">name</span> <span class="pln" style="color: #000;">string</span><span class="pun">)</span> <span class="pln" style="color: #000;">string</span> <span class="pun">{</span>
+    <span class="pln" style="color: #000;">style</span><span class="pun">,</span> <span class="pln" style="color: #000;">ok</span> <span class="pun">:</span><span class="pun">=</span> <span class="pln" style="color: #000;">themes</span><span class="pun">[</span><span class="pln" style="color: #000;">name</span><span class="pun">]</span>
+    <span class="kwd">if</span> <span class="pln" style="color: #000;">ok</span> <span class="pun">{</span>
+        <span class="kwd">return</span> <span class="pln" style="color: #000;">style</span>
+    <span class="pun">}</span>
+    <span class="kwd">return</span> <span class="pln" style="color: #000;">themes</span><span class="pun">[</span><span class="typ">DeafultTheme</span><span class="pun">]</span>
+<span class="pun">}</span>
+</code></pre></body></html>
