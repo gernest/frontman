@@ -233,7 +233,7 @@ func AsHTML(src []byte) ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func Highlight(src []byte, embed bool, theme string, klasifier ...Classifier) ([]byte, error) {
+func Highlight(src []byte, lang string, klasifier ...Classifier) ([]byte, error) {
 	var c Classifier
 	c = HTMLClassifier(DefaultHTMLConfig)
 	if len(klasifier) > 0 {
