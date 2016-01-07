@@ -1,0 +1,122 @@
+<html><head></head><body><h1 id="markdown-with-inline-syntax-highlighting">Markdown with inline syntax highlighting</h1>
+<p>There are great libraries for markdown rendering in golang. I have had a chance
+to use  some of them namely
+<a href="https://github.com/russross/blackfriday">blackfriday</a> and
+<a href="https://github.com/a8m/mark">mark</a>.</p>
+<p>Today I would like to share with you my latest adventure. Now you can render
+markdown files with syntax highlighting that is inline.</p>
+<h2 id="what-the-hell-is-inline-styles-">What the hell is inline styles?</h2>
+<p>If you want to add styles to html files there are two ways.</p>
+<ul>
+<li><p>Link with external files in the header</p></li>
+<li><p>Inline the styles with the <code>style</code> attribute.</p></li>
+</ul>
+<p>So whatever the trick the syntax highlighter is doing it has those two options
+to bring color to your rendered html documents.</p>
+<p>Majority uses the <a href="https://github.com/google/code-prettify">code-pretttify</a>
+classes to the document and requires you to
+link to the <a href="https://github.com/google/code-prettify#setup">code-pretttify
+stylesheet</a> to have the document
+highlighted.</p>
+<h2 id="why-inline-styles-for-your-code-snippets-">Why inline styles for your code snippets?</h2>
+<ul>
+<li><p>Your page is already clouded with many links to external stylesheets and
+you dont feel like it is worthy to add another dependency
+to get the that short code snippet highlighted.</p><ul>
+<li>For the sake of knowledge( why not?).</li>
+</ul></li>
+</ul>
+<p>After saying that, I would like to introduce to you
+<a href="https://github.com/gernest/frontman">frontman</a> my attempt to
+collect useful  stuffs for static web( In golang of course).For the past few
+weeks I have been taking apart some of the golang projects and messing with them
+by adding fun features. I have successfully put together a markdown renderer
+which support inline syntax highlighting.</p>
+<p>Install the package as follows</p>
+<pre class="lang-bash prettyprint" style="background-color: #333; display: block;"><code class="lang-bash prettyprint">
+  <span class="pln" style="color: #fff;">go</span> <span class="kwd" style="color: #f0e68c; font-weight: bold;">get</span> <span class="pln" style="color: #fff;">github</span><span class="pun" style="color: #fff;">.</span><span class="pln" style="color: #fff;">com</span><span class="pun" style="color: #fff;">/</span><span class="pln" style="color: #fff;">gernest</span><span class="pun" style="color: #fff;">/</span><span class="pln" style="color: #fff;">frontman</span>
+</code></pre>
+<h1 id="example">Example</h1>
+<p>You can render this document into html with zero dependency and
+beautiful syntax highlighting, the example code is
+included in this respository.</p>
+<p>You can also see the results in the themes section below after applying
+different themes that are shipped with the
+<a href="https://github.com/gernest/frontman">frontman</a>   package.</p>
+<p>The full example code</p>
+<pre class="lang-go prettyprint" style="background-color: #333; display: block;"><code class="lang-go prettyprint">
+<span class="kwd" style="color: #f0e68c; font-weight: bold;">package</span> <span class="pln" style="color: #fff;">main</span>
+
+<span class="kwd" style="color: #f0e68c; font-weight: bold;">import</span> <span class="pun" style="color: #fff;">(</span>
+    <span class="str" style="color: #ffa0a0;">&#34;bytes&#34;</span>
+    <span class="str" style="color: #ffa0a0;">&#34;flag&#34;</span>
+    <span class="str" style="color: #ffa0a0;">&#34;io/ioutil&#34;</span>
+    <span class="str" style="color: #ffa0a0;">&#34;log&#34;</span>
+
+    <span class="str" style="color: #ffa0a0;">&#34;github.com/gernest/frontman&#34;</span>
+<span class="pun" style="color: #fff;">)</span>
+
+<span class="kwd" style="color: #f0e68c; font-weight: bold;">func</span> <span class="pln" style="color: #fff;">main</span><span class="pun" style="color: #fff;">(</span><span class="pun" style="color: #fff;">)</span> <span class="pun" style="color: #fff;">{</span>
+    <span class="kwd" style="color: #f0e68c; font-weight: bold;">var</span> <span class="pun" style="color: #fff;">(</span>
+        <span class="pln" style="color: #fff;">fileName</span>   <span class="pln" style="color: #fff;">string</span>
+        <span class="pln" style="color: #fff;">themeName</span>  <span class="pln" style="color: #fff;">string</span>
+        <span class="pln" style="color: #fff;">outputFile</span> <span class="pln" style="color: #fff;">string</span>
+        <span class="kwd" style="color: #f0e68c; font-weight: bold;">inline</span>     <span class="kwd" style="color: #f0e68c; font-weight: bold;">bool</span>
+        <span class="pln" style="color: #fff;">highlight</span>  <span class="kwd" style="color: #f0e68c; font-weight: bold;">bool</span>
+    <span class="pun" style="color: #fff;">)</span>
+
+    <span class="pln" style="color: #fff;">flag</span><span class="pun" style="color: #fff;">.</span><span class="typ" style="color: #98fb98;">StringVar</span><span class="pun" style="color: #fff;">(</span><span class="pun" style="color: #fff;">&amp;</span><span class="pln" style="color: #fff;">fileName</span><span class="pun" style="color: #fff;">,</span> <span class="str" style="color: #ffa0a0;">&#34;f&#34;</span><span class="pun" style="color: #fff;">,</span> <span class="str" style="color: #ffa0a0;">&#34;highlight.md&#34;</span><span class="pun" style="color: #fff;">,</span> <span class="str" style="color: #ffa0a0;">&#34;Input markdown document&#34;</span><span class="pun" style="color: #fff;">)</span>
+    <span class="pln" style="color: #fff;">flag</span><span class="pun" style="color: #fff;">.</span><span class="typ" style="color: #98fb98;">StringVar</span><span class="pun" style="color: #fff;">(</span><span class="pun" style="color: #fff;">&amp;</span><span class="pln" style="color: #fff;">themeName</span><span class="pun" style="color: #fff;">,</span> <span class="str" style="color: #ffa0a0;">&#34;t&#34;</span><span class="pun" style="color: #fff;">,</span> <span class="str" style="color: #ffa0a0;">&#34;prettify&#34;</span><span class="pun" style="color: #fff;">,</span> <span class="str" style="color: #ffa0a0;">&#34;Theme name&#34;</span><span class="pun" style="color: #fff;">)</span>
+    <span class="pln" style="color: #fff;">flag</span><span class="pun" style="color: #fff;">.</span><span class="typ" style="color: #98fb98;">StringVar</span><span class="pun" style="color: #fff;">(</span><span class="pun" style="color: #fff;">&amp;</span><span class="pln" style="color: #fff;">outputFile</span><span class="pun" style="color: #fff;">,</span> <span class="str" style="color: #ffa0a0;">&#34;o&#34;</span><span class="pun" style="color: #fff;">,</span> <span class="str" style="color: #ffa0a0;">&#34;index.html&#34;</span><span class="pun" style="color: #fff;">,</span> <span class="str" style="color: #ffa0a0;">&#34;File to save outuput&#34;</span><span class="pun" style="color: #fff;">)</span>
+    <span class="pln" style="color: #fff;">flag</span><span class="pun" style="color: #fff;">.</span><span class="typ" style="color: #98fb98;">BoolVar</span><span class="pun" style="color: #fff;">(</span><span class="pun" style="color: #fff;">&amp;</span><span class="kwd" style="color: #f0e68c; font-weight: bold;">inline</span><span class="pun" style="color: #fff;">,</span> <span class="str" style="color: #ffa0a0;">&#34;i&#34;</span><span class="pun" style="color: #fff;">,</span> <span class="kwd" style="color: #f0e68c; font-weight: bold;">true</span><span class="pun" style="color: #fff;">,</span> <span class="str" style="color: #ffa0a0;">&#34;enable inline style&#34;</span><span class="pun" style="color: #fff;">)</span>
+    <span class="pln" style="color: #fff;">flag</span><span class="pun" style="color: #fff;">.</span><span class="typ" style="color: #98fb98;">BoolVar</span><span class="pun" style="color: #fff;">(</span><span class="pun" style="color: #fff;">&amp;</span><span class="pln" style="color: #fff;">highlight</span><span class="pun" style="color: #fff;">,</span> <span class="str" style="color: #ffa0a0;">&#34;h&#34;</span><span class="pun" style="color: #fff;">,</span> <span class="kwd" style="color: #f0e68c; font-weight: bold;">true</span><span class="pun" style="color: #fff;">,</span> <span class="str" style="color: #ffa0a0;">&#34;enable syntax highlight&#34;</span><span class="pun" style="color: #fff;">)</span>
+    <span class="pln" style="color: #fff;">flag</span><span class="pun" style="color: #fff;">.</span><span class="typ" style="color: #98fb98;">Parse</span><span class="pun" style="color: #fff;">(</span><span class="pun" style="color: #fff;">)</span>
+
+    <span class="pln" style="color: #fff;">data</span><span class="pun" style="color: #fff;">,</span> <span class="pln" style="color: #fff;">err</span> <span class="pun" style="color: #fff;">:</span><span class="pun" style="color: #fff;">=</span> <span class="pln" style="color: #fff;">ioutil</span><span class="pun" style="color: #fff;">.</span><span class="typ" style="color: #98fb98;">ReadFile</span><span class="pun" style="color: #fff;">(</span><span class="pln" style="color: #fff;">fileName</span><span class="pun" style="color: #fff;">)</span>
+    <span class="kwd" style="color: #f0e68c; font-weight: bold;">if</span> <span class="pln" style="color: #fff;">err</span> <span class="pun" style="color: #fff;">!</span><span class="pun" style="color: #fff;">=</span> <span class="kwd" style="color: #f0e68c; font-weight: bold;">nil</span> <span class="pun" style="color: #fff;">{</span>
+        <span class="pln" style="color: #fff;">log</span><span class="pun" style="color: #fff;">.</span><span class="typ" style="color: #98fb98;">Fatal</span><span class="pun" style="color: #fff;">(</span><span class="pln" style="color: #fff;">err</span><span class="pun" style="color: #fff;">)</span>
+    <span class="pun" style="color: #fff;">}</span>
+    <span class="pln" style="color: #fff;">out</span> <span class="pun" style="color: #fff;">:</span><span class="pun" style="color: #fff;">=</span> <span class="pun" style="color: #fff;">&amp;</span><span class="pln" style="color: #fff;">bytes</span><span class="pun" style="color: #fff;">.</span><span class="typ" style="color: #98fb98;">Buffer</span><span class="pun" style="color: #fff;">{</span><span class="pun" style="color: #fff;">}</span>
+    <span class="pln" style="color: #fff;">err</span> <span class="pun" style="color: #fff;">=</span> <span class="pln" style="color: #fff;">frontman</span><span class="pun" style="color: #fff;">.</span><span class="typ" style="color: #98fb98;">Markdown</span><span class="pun" style="color: #fff;">(</span><span class="pln" style="color: #fff;">out</span><span class="pun" style="color: #fff;">,</span> <span class="pln" style="color: #fff;">bytes</span><span class="pun" style="color: #fff;">.</span><span class="typ" style="color: #98fb98;">NewReader</span><span class="pun" style="color: #fff;">(</span><span class="pln" style="color: #fff;">data</span><span class="pun" style="color: #fff;">)</span><span class="pun" style="color: #fff;">,</span> <span class="pln" style="color: #fff;">highlight</span><span class="pun" style="color: #fff;">,</span>
+  <span class="kwd" style="color: #f0e68c; font-weight: bold;">inline</span><span class="pun" style="color: #fff;">,</span><span class="pln" style="color: #fff;">themeName</span><span class="pun" style="color: #fff;">)</span>
+    <span class="kwd" style="color: #f0e68c; font-weight: bold;">if</span> <span class="pln" style="color: #fff;">err</span> <span class="pun" style="color: #fff;">!</span><span class="pun" style="color: #fff;">=</span> <span class="kwd" style="color: #f0e68c; font-weight: bold;">nil</span> <span class="pun" style="color: #fff;">{</span>
+        <span class="pln" style="color: #fff;">log</span><span class="pun" style="color: #fff;">.</span><span class="typ" style="color: #98fb98;">Fatal</span><span class="pun" style="color: #fff;">(</span><span class="pln" style="color: #fff;">err</span><span class="pun" style="color: #fff;">)</span>
+    <span class="pun" style="color: #fff;">}</span>
+    <span class="pln" style="color: #fff;">ioutil</span><span class="pun" style="color: #fff;">.</span><span class="typ" style="color: #98fb98;">WriteFile</span><span class="pun" style="color: #fff;">(</span><span class="pln" style="color: #fff;">outputFile</span><span class="pun" style="color: #fff;">,</span> <span class="pln" style="color: #fff;">out</span><span class="pun" style="color: #fff;">.</span><span class="typ" style="color: #98fb98;">Bytes</span><span class="pun" style="color: #fff;">(</span><span class="pun" style="color: #fff;">)</span><span class="pun" style="color: #fff;">,</span> <span class="dec" style="color: #98fb98;">0600</span><span class="pun" style="color: #fff;">)</span>
+<span class="pun" style="color: #fff;">}</span>
+</code></pre>
+<p>then you can do the following to render this document</p>
+<pre class="lang-shell prettyprint" style="background-color: #333; display: block;"><code class="lang-shell prettyprint">
+<span class="pun" style="color: #fff;">$</span> <span class="pln" style="color: #fff;">git</span> <span class="pln" style="color: #fff;">clone</span> <span class="pln" style="color: #fff;">git</span><span class="pun" style="color: #fff;">@</span><span class="pln" style="color: #fff;">github</span><span class="pun" style="color: #fff;">.</span><span class="pln" style="color: #fff;">com</span><span class="pun" style="color: #fff;">:</span><span class="pln" style="color: #fff;">gernest</span><span class="pun" style="color: #fff;">/</span><span class="pln" style="color: #fff;">talk</span><span class="pun" style="color: #fff;">.</span><span class="pln" style="color: #fff;">git</span>
+
+<span class="pun" style="color: #fff;">$</span> <span class="pln" style="color: #fff;">cd</span> <span class="pln" style="color: #fff;">talk</span>
+
+<span class="pun" style="color: #fff;">$</span> <span class="pln" style="color: #fff;">go</span> <span class="pln" style="color: #fff;">run</span> <span class="pln" style="color: #fff;">code</span><span class="pun" style="color: #fff;">/</span><span class="pln" style="color: #fff;">hithlight</span><span class="pun" style="color: #fff;">.</span><span class="pln" style="color: #fff;">go</span>  <span class="pun" style="color: #fff;">-</span><span class="pln" style="color: #fff;">f</span> <span class="pln" style="color: #fff;">highlight</span><span class="pun" style="color: #fff;">.</span><span class="pln" style="color: #fff;">md</span>
+
+<span class="pun" style="color: #fff;">$</span> <span class="pln" style="color: #fff;">sensible</span><span class="pun" style="color: #fff;">-</span><span class="pln" style="color: #fff;">browser</span> <span class="pln" style="color: #fff;">index</span><span class="pun" style="color: #fff;">.</span><span class="pln" style="color: #fff;">html</span>
+</code></pre>
+<p>In case you want to play with the example code. You can see all the available
+oprions via</p>
+<pre class="lang-shell prettyprint" style="background-color: #333; display: block;"><code class="lang-shell prettyprint">
+<span class="pun" style="color: #fff;">$</span> <span class="pln" style="color: #fff;">go</span> <span class="pln" style="color: #fff;">run</span> <span class="pln" style="color: #fff;">code</span><span class="pun" style="color: #fff;">/</span><span class="pln" style="color: #fff;">hithlight</span><span class="pun" style="color: #fff;">.</span><span class="pln" style="color: #fff;">go</span> <span class="pun" style="color: #fff;">-</span><span class="pln" style="color: #fff;">help</span>
+</code></pre>
+<h1 id="themes">Themes</h1>
+<p>This package comes shipped with a couple of theme that you can choose from( not
+they are taken from the <a href="https://rawgit.com/google/code-prettify/master/styles/index.html">code-pretttify
+themes</a></p>
+<p><strong>Themes in action</strong></p>
+<ul>
+<li><a href="http://gernest.github.io/frontman/highlight/prettify.html">Deault</a></li>
+<li><a href="http://gernest.github.io/frontman/highlight/desert.html">Desert</a></li>
+<li><a href="http://gernest.github.io/frontman/highlight/doxy.html">doxy</a></li>
+<li><a href="http://gernest.github.io/frontman/highlight/obsidian.html">obsidian</a></li>
+<li><a href="http://gernest.github.io/frontman/highlight/sunburst.html">sunburst</a></li>
+</ul>
+<h1 id="summary">Summary</h1>
+<p>Markdown is a very good standard and golang has fantastic tools for it.</p>
+<p>I plan to add more interesting utilities into<br/><a href="https://github.com/gernest/frontman">frontman</a> , and you are very
+welcome if you have something in mind to help people build a better static web
+experience.</p>
+<p><strong>PS</strong>: This repository is my blog and   my twitter account
+<a href="https://twitter.com/gernesti">@gernesti</a> is my
+RSS feed.</p></body></html>
