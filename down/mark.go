@@ -9,7 +9,7 @@ import (
 	"github.com/gernest/mark"
 )
 
-const DeafultTheme = "prettity"
+const DeafultTheme = "prettify"
 
 func Mark(out io.Writer, src io.Reader, highlight, embed bool, theme ...string) error {
 	style := DeafultTheme

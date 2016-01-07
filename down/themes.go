@@ -1,14 +1,14 @@
 package down
 
 var themes = map[string]string{
-	"prettity": prettity,
+	"prettify": prettify,
 	"desert":   desert,
 	"doxy":     doxy,
 	"obsidian": obsidian,
 	"sunburst": sunburst,
 }
 
-var prettity = `
+var prettify = `
 /**
  * @license
  * Copyright (C) 2015 Google Inc.
